@@ -9,6 +9,7 @@ in order to classify data.
 
 import json
 import math
+import pickle
 
 # from sklearn import svm
 # from sklearn import neighbors
@@ -242,3 +243,22 @@ def create_classifier_from_data(layout_list):
 
     classifier.fit(collected_data, collected_labels)
     return classifier
+
+
+if __name__ == '__main__':
+    ALL_CLASSIFICATIONS = ['piano', 'xylophone','piano_roll', 'zither', 'small_grid', 'large_grid', 'tonnetz','circle']
+
+    classification_data = []
+    for classification in ALL_CLASSIFICATIONS:
+        filepath = f'{classification}.json'
+        with open(filepath, 'r') as f:
+            print('reading data from', filepath)
+            data = json.load(f)
+            classification_data.append((data, classification))
+
+    print('loaded all data, creating classifier')
+    classifier = create_classifier_from_data(classification_data)
+    filepath = 'trained_classifier.pkl'
+    with open(filepath, 'wb') as f:
+        pickle.dump(classifier, f)
+    print('classifier created and saved!')
